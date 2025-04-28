@@ -6,11 +6,13 @@
 ## 
 
 ### 1 Introdução
-Compreender os hábitos de consumo dos clientes é um fator decisivo para o sucesso de estratégias de vendas, marketing e organização de produtos.
+Compreender os hábitos de consumo dos clientes é um fator crítico para o sucesso de estratégias de vendas, marketing e organização de produtos. Conhecer quais itens são frequentemente adquiridos em conjunto permite otimizar desde a disposição de produtos em lojas físicas e virtuais até a definição de campanhas promocionais mais assertivas.
 
-Este projeto tem como objetivo aplicar uma técnica conhecida como Market Basket Analysis para identificar padrões de compra entre produtos e, a partir desses padrões, gerar recomendações de produtos de forma automatizada.
+Este projeto tem como objetivo aplicar a técnica de Market Basket Analysis para identificar padrões de compra entre produtos, revelando associações que, muitas vezes, não são evidentes a partir da simples observação dos dados brutos.
 
-A análise é baseada em Regras de Associação, utilizando o algoritmo Apriori para identificar relações relevantes entre itens adquiridos em conjunto.
+A análise será conduzida com base em Regras de Associação, utilizando o algoritmo Apriori, uma técnica amplamente reconhecida por sua eficiência em encontrar combinações de itens que ocorrem com frequência nas transações.
+
+A partir dos padrões identificados, será possível automatizar a geração de recomendações de produtos e embasar ações estratégicas como agrupamento inteligente de produtos e ofertas personalizadas, promovendo assim uma experiência de compra mais relevante e aumentando o potencial de receita.
 
 ###  1.1 Regras de Associação
 As regras de associação são técnicas de mineração de dados que buscam identificar relacionamentos frequentes entre itens em grandes conjuntos de dados.
@@ -49,10 +51,10 @@ Esse processo ajuda a reduzir a complexidade e focar apenas nos padrões relevan
 
 - k = 1 (Itens individuais): Primeiro, verificamos quantas vezes cada item isolado aparece no total de transações. Eliminamos o item que não atingiu o suporte mínimo definido. 
 - k = 2 (Pares de itens): Depois, formamos combinações de dois itens (pares) entre os itens que passaram da etapa anterior. Novamente, eliminamos os pares de itens cujo suporte for inferior ao suporte mínimo estabelecido.
-- k = 3 (Trios de itens): A seguir, formamos combinações de três itens, apenas a partir dos pares que ainda atendem ao suporte mínimo. Então, verificamos em quantas transações esses conjuntos de três itens aparecem. Se o suporte mínimo for atendido, mantemos esses trios para formar regras futuras; caso contrário, eliminamos o conjunto que não atingiu o suporte mínimo.
+- k = 3 (Trios de itens): A seguir, formamos combinações de três itens, apenas a partir dos pares que ainda atendem ao suporte mínimo. Então, verificamos em quantas transações esses conjuntos de três itens aparecem. Se o suporte mínimo for atendido, mantemos esses trios para formar regras futuras, caso contrário, eliminamos o conjunto que não atingiu o suporte mínimo.
 - K > 3: O processo pode continuar ao unirmos trios que compartilham dois itens em comum para formar conjuntos de quatro itens. Lembrando que esse crescimento é controlado, pois, só combinamos conjuntos que têm elementos em comum e que atenderam o suporte mínimo nos passos anteriores.
 
-Exmeplo:
+Exemplo:
 
 **Transações**
 | ID | Itens |
@@ -67,7 +69,7 @@ Exmeplo:
 
 **Contagem dos Itens (k=1), Suporte = 2/6 - 33,33%**
 
-| Item | Ocorrências |Suporte (Ocorrências/6) |Sobrevive? (≥2) |
+| Item | Ocorrências |Suporte (Ocorrências/6) |Sobrevive? (≥2/6) |
 |:-------------|:------------|:-----------|:-----------|
 | Pão          | 5            | 83,3%     |  Sim         |
 | Leite        | 3            | 50%       |  Sim         |
@@ -76,7 +78,7 @@ Exmeplo:
 | Refrigerante | 2            | 33,3%     |  Sim         |
 
 **Contagem dos Itens (k=2), Suporte = 2/6 - 33,33%**
-| Par | Ocorrências | Suporte (Ocorrências/6) | Sobrevive? (≥2)|
+| Par | Ocorrências | Suporte (Ocorrências/6) | Sobrevive? (≥26)|
 |:--------------|:-----------|:----------------|:--------|
 | (Pão, Leite)  | 3          | 50%            | Sim      |
 | (Pão, Manteiga)  | 3       | 50%            | Sim      |
@@ -90,16 +92,17 @@ Exmeplo:
 | (Manteiga, Refrigerante)| 0| 0%             |  Não     |
 
 
-**Contagem dos Itens (k=2), Suporte = 2/6 - 33,33%**
+**Contagem dos Itens (k=3), Suporte = 2/6 - 33,33%**
 
-| Trio | Ocorrências | Suporte (Ocorrências/6) | Sobrevive? (≥2)|
+| Trio | Ocorrências | Suporte (Ocorrências/6) | Sobrevive? (≥2/6)|
 |:--------------|:-----------|:----------------|:--------|
 | (Pão, Leite, Manteiga) | 3 | 50% | Sim |
 | (Pão, Café, Refrigerante) | 1 | 16,7% | Não |
 
 
 https://www.youtube.com/watch?v=YGEYty0xYc0
-22 minutos. 
+25 minutos. 
+confiança 
 
 ## 7 Instalação e configuração
 
@@ -188,13 +191,13 @@ sudo usermod -aG docker $USER
 - Após isso, reinicie o terminal para que a permissão seja aplicada.
 
 - Resolver possível conflito com PostgreSQL instalado no Windows:
-- Se houver PostgreSQL rodando, pode haver conflito na porta 5432. Crie um arquivo de override:
+  - Se houver PostgreSQL instalado em sua máquina, pode haver conflito na porta 5432. Crie um arquivo de override:
 
 ```bash
 nano docker-compose.override.yml
 ```
 
-Coloque o seguinte conteúdo:
+  - Coloque o seguinte conteúdo:
 
 ```bash
 services:
@@ -204,8 +207,7 @@ services:
 ```
 
 - Reinicie o Docker.
-- Iniciar o Astro: 
-- Acesse a pasta do projeto e execute:
+- Para iniciar o Astro,  acesse a pasta do projeto e execute:
 
 ```bash
 cd ~/nome-projeto
@@ -234,3 +236,8 @@ code .
 - Esse comando abrirá a pasta do projeto diretamente no VSCode do Windows.
 - Na primeira vez que você usar code . no Ubuntu (WSL), o VSCode poderá iniciar o download e instalação automática do VSCode Server.
 - O VSCode Server é um pequeno serviço instalado dentro do Ubuntu, necessário para permitir que o VSCode do Windows consiga acessar, editar e rodar comandos em arquivos Linux de forma integrada.
+
+### 7.2 Configuração do dbt Cloud:
+
+
+### 7.2 Configuração do SnowFlake:
