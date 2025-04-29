@@ -34,7 +34,7 @@ Durante a construção das regras de associação, três métricas principais s�
 | :------:| --------- | :-------:| 
 Suporte       | Mede a frequência com que um item ou conjunto de itens aparece nas transações. Pode ser calculado para um único item (k=1) ou para combinações de dois, três ou mais itens (k>1).| Suporte (A) =  Transações (A) / Total de Transações|
 Confiança      | Indica a probabilidade de o consequente ser comprado, dado que o antecedente já foi comprado.| Confiança (A ➔ B) = Transações com A e B / Transações com A  |
-Lift     | Avalia a força da associação, comparando a probabilidade real de compra conjunta com a que seria esperada se os itens fossem independentes.   | Lift (A ➔ B) = Confiança (A ➔ B) / Suporte (B) |
+Lift     | Avalia a força da associação, comparando a probabilidade real de compra conjunta com a que seria esperada se os itens fossem independentes.   | Lift (A ➔ B) = Transações com A e B / (Transações com A) * (Transações com B) |
 
 Essas métricas ajudam a garantir que apenas padrões fortes e relevantes sejam considerados no processo de recomendação.
 
@@ -99,10 +99,62 @@ Exemplo:
 | (Pão, Leite, Manteiga) | 3 | 50% | Sim |
 | (Pão, Café, Refrigerante) | 1 | 16,7% | Não |
 
+**Em análise de regras de associação, o suporte pode ser interpretado em termos de probabilidade:**
+  - O suporte de um item (ou conjunto de itens) representa a probabilidade simples de uma transação escolhida aleatoriamente conter aquele item (ou conjunto). Suporte(A)=P(A), exemplo:
+    - Considerando o conjunto de itens A: {Pão, Leite, Manteiga}, A aparece em 3 transações de um total de 6. Então: P(A)= 3​/6 =0,5 (50%)
 
-https://www.youtube.com/watch?v=YGEYty0xYc0
-25 minutos. 
-confiança 
+### 1.6 Cálculo da Confiança
+
+| Regra | Fórmula | Cálculo | Resultado |
+|:---------------------------|:---------------------------------------------------|:---------------------|:-----------|
+| Pão → Leite, Manteiga | (Suporte de Pão, Leite, Manteiga) ÷ (Suporte de Pão) | (3/6) ÷ (5/6) | 0,6 (ou 60%) |
+| Leite → Pão, Manteiga | (Suporte de Pão, Leite, Manteiga) ÷ (Suporte de Leite) | (3/6) ÷ (3/6) | 1,0 (ou 100%) |
+| Manteiga → Pão, Leite | (Suporte de Pão, Leite, Manteiga) ÷ (Suporte de Manteiga) | (3/6) ÷ (3/6) | 1,0 (ou 100%) |
+| Pão e Leite → Manteiga | (Suporte de Pão, Leite, Manteiga) ÷ (Suporte de Pão e Leite) | (3/6) ÷ (3/6) | 1,0 (ou 100%) |
+| Pão e Manteiga → Leite | (Suporte de Pão, Leite, Manteiga) ÷ (Suporte de Pão e Manteiga) | (3/6) ÷ (3/6) | 1,0 (ou 100%) |
+| Leite e Manteiga → Pão | (Suporte de Pão, Leite, Manteiga) ÷ (Suporte de Leite e Manteiga) | (3/6) ÷ (3/6) | 1,0 (ou 100%) |
+
+**Em análise de regras de associação, a confiança também pode ser interpretada em termos de probabilidade:**
+  - A confiança de uma regra A → B representa a probabilidade condicional de uma transação conter B, dado que já sabemos que ela contém A. 
+  - Confiança (A ➔ B) = P(B∣A) = P(A∩B)​/P(A). 
+    - Onde P(B∣A) é a probabilidade condicional de ocorrer B dado que ocorreu A
+  - Exemplo: Pão → Leite, Manteiga, podemos nos referir como: Qual a probabilidade de uma transação conter pão, leite e manteiga, dado que a transação já contém o item pão. Então, temos:
+    - P(A∩B) = P(Pão,Leite,Manteiga) = 3/6
+    - P(A) = P(Pão) = 5/6
+    - Confiança(Pão ➔ Leite, Manteiga) = (3/6) / (5/6) = 0,6 = 60%.
+    - Portanto, entre todas as transações que contêm Pão, 60% também contêm Leite e Manteiga.
+  
+  - Nesta etapa também definimos uma confiança mínima. 
+
+### 1.6 Cálculo do Lift
+
+| Regra | Fórmula | Cálculo | Resultado |
+|:----------------|:-----------------|:-----------------|:---------|
+| Pão → Leite, Manteiga | (Suporte de Pão, Leite, Manteiga) ÷ (Suporte de Pão × Suporte de Leite, Manteiga) | (3/6) ÷ (5/6 × 3/6) | ≈ 1,2 |
+
+Em análise de regras de associação, o Lift também pode ser interpretado em termos de probabilidade:
+- O Lift mede o quanto a ocorrência conjunta de A e B é mais provável (ou menos provável) do que seria esperado se A e B fossem independentes.
+- Formalmente: Lift(A➔B) = P(A∩B)/ P(A) * P(B)
+- Onde:
+  - P(A∩B) é a probabilidade de ocorrer A e B ao mesmo tempo.
+  - P(A) é a probabilidade de ocorrer A.
+  - P(B) é a probabilidade de ocorrer B
+- Exemplo: Lift (Pão → Leite, Manteiga) =  3/6 / (5/6) * (3/6)= 
+- 0,5/0,4167 = 1,2
+-  Um Lift de 1,2 indica que a chance de uma transação conter Leite e Manteiga dado que ela contém Pão é 20% maior do que seria esperado caso os eventos fossem independentes.  
+
+- Se o Lift fosse 1, significaria independência (nenhuma influência).
+- Lift > 1 → Associação positiva (ocorrem juntos mais do que o esperado).
+- Lift < 1 → Associação negativa (ocorrem juntos menos do que o esperado).
+
+
+Entre as métricas utilizadas na análise de regras de associação, **o Lift é considerado a mais importante para avaliar a força real da relação entre os itens:**
+- Ao contrário do suporte, que olha principalmente para o antecedente, o Lift se preocupa com a relação entre o antecedente e o consequente. Além disso, ele corrige problemas que podem surgir quando existe um volume muito alto de transações para um único item.
+- Enquanto o suporte pode indicar alta frequência apenas porque o antecedente é muito popular, o Lift avalia também o volume de transações do consequente.  
+Assim, ele mede se a ocorrência conjunta de A e B é realmente significativa, considerando o contexto geral dos dados.
+
+
+**Em resumo:** o Lift ajusta a análise para o contexto geral das transações, tornando-o a métrica mais confiável para identificar padrões relevantes de associação.
 
 ## 7 Instalação e configuração
 
@@ -237,7 +289,7 @@ code .
 - Na primeira vez que você usar code . no Ubuntu (WSL), o VSCode poderá iniciar o download e instalação automática do VSCode Server.
 - O VSCode Server é um pequeno serviço instalado dentro do Ubuntu, necessário para permitir que o VSCode do Windows consiga acessar, editar e rodar comandos em arquivos Linux de forma integrada.
 
-### 7.2 Configuração do dbt Cloud:
+### 7.2 Configuração e instalação do dbt Core
 
 
-### 7.2 Configuração do SnowFlake:
+### 7.3 Configuração do SnowFlake:
