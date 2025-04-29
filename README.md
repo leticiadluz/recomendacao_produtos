@@ -100,7 +100,7 @@ Exemplo:
 | (Pão, Café, Refrigerante) | 1 | 16,7% | Não |
 
 **Em análise de regras de associação, o suporte pode ser interpretado em termos de probabilidade:**
-  - O suporte de um item (ou conjunto de itens) representa a probabilidade simples de uma transação escolhida aleatoriamente conter aquele item (ou conjunto). Suporte(A)=P(A), exemplo:
+  - O suporte de um item (ou conjunto de itens) representa a probabilidade simples de uma transação escolhida aleatoriamente conter aquele item (ou conjunto). Suporte(A) = P(A), exemplo:
     - Considerando o conjunto de itens A: {Pão, Leite, Manteiga}, A aparece em 3 transações de um total de 6. Então: P(A)= 3​/6 =0,5 (50%)
 
 ### 1.6 Cálculo da Confiança
@@ -132,15 +132,15 @@ Exemplo:
 |:----------------|:-----------------|:-----------------|:---------|
 | Pão → Leite, Manteiga | (Suporte de Pão, Leite, Manteiga) ÷ (Suporte de Pão × Suporte de Leite, Manteiga) | (3/6) ÷ (5/6 × 3/6) | ≈ 1,2 |
 
-Em análise de regras de associação, o Lift também pode ser interpretado em termos de probabilidade:
+**O Lift também pode ser interpretado em termos de probabilidade:**
 - O Lift mede o quanto a ocorrência conjunta de A e B é mais provável (ou menos provável) do que seria esperado se A e B fossem independentes.
 - Formalmente: Lift(A➔B) = P(A∩B)/ P(A) * P(B)
 - Onde:
   - P(A∩B) é a probabilidade de ocorrer A e B ao mesmo tempo.
   - P(A) é a probabilidade de ocorrer A.
   - P(B) é a probabilidade de ocorrer B
-- Exemplo: Lift (Pão → Leite, Manteiga) =  3/6 / (5/6) * (3/6)= 
-- 0,5/0,4167 = 1,2
+- Exemplo: Lift (Pão → Leite, Manteiga) =  3/6 / (5/6) * (3/6) = 
+  - 0,5/0,4167 = 1,2
 -  Um Lift de 1,2 indica que a chance de uma transação conter Leite e Manteiga dado que ela contém Pão é 20% maior do que seria esperado caso os eventos fossem independentes.  
 
 - Se o Lift fosse 1, significaria independência (nenhuma influência).
@@ -148,13 +148,13 @@ Em análise de regras de associação, o Lift também pode ser interpretado em t
 - Lift < 1 → Associação negativa (ocorrem juntos menos do que o esperado).
 
 
-Entre as métricas utilizadas na análise de regras de associação, **o Lift é considerado a mais importante para avaliar a força real da relação entre os itens:**
+Entre as métricas utilizadas na análise de regras de associação, **o Lift é considerado a mais importante para avaliar a força real da relação entre os itens**
 - Ao contrário do suporte, que olha principalmente para o antecedente, o Lift se preocupa com a relação entre o antecedente e o consequente. Além disso, ele corrige problemas que podem surgir quando existe um volume muito alto de transações para um único item.
 - Enquanto o suporte pode indicar alta frequência apenas porque o antecedente é muito popular, o Lift avalia também o volume de transações do consequente.  
 Assim, ele mede se a ocorrência conjunta de A e B é realmente significativa, considerando o contexto geral dos dados.
 
 
-**Em resumo:** o Lift ajusta a análise para o contexto geral das transações, tornando-o a métrica mais confiável para identificar padrões relevantes de associação.
+**Em resumo,** o Lift ajusta a análise para o contexto geral das transações, tornando-o a métrica mais confiável para identificar padrões relevantes de associação.
 
 ## 7 Instalação e configuração
 
