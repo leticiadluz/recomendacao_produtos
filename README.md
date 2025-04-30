@@ -8,7 +8,7 @@
 ### 1 Introdução
 Compreender os hábitos de consumo dos clientes é um fator crítico para o sucesso de estratégias de vendas, marketing e organização de produtos. Conhecer quais itens são frequentemente adquiridos em conjunto permite otimizar desde a disposição de produtos em lojas físicas e virtuais até a definição de campanhas promocionais mais assertivas.
 
-Este projeto tem como objetivo aplicar a técnica de Market Basket Analysis para identificar padrões de compra entre produtos, revelando associações que, muitas vezes, não são evidentes a partir da simples observação dos dados brutos.
+**Este projeto tem como objetivo aplicar a técnica de Market Basket Analysis para identificar padrões de compra entre produtos, revelando associações que, muitas vezes, não são evidentes a partir da simples observação dos dados brutos.**
 
 A análise será conduzida com base em Regras de Associação, utilizando o algoritmo Apriori, uma técnica amplamente reconhecida por sua eficiência em encontrar combinações de itens que ocorrem com frequência nas transações.
 
@@ -156,9 +156,46 @@ Assim, ele mede se a ocorrência conjunta de A e B é realmente significativa, c
 
 **Em resumo,** o Lift ajusta a análise para o contexto geral das transações, tornando-o a métrica mais confiável para identificar padrões relevantes de associação.
 
-## 7 Instalação e configuração
 
-### 7.1 Instalação do Airflow
+## 2 Visão geral e preparação dos dados
+
+Este projeto simula um cenário de um e-commerce especializado em artigos esportivos. A loja oferece uma ampla variedade de produtos, incluindo calçados esportivos, roupas, acessórios, equipamentos de treino e suplementos.
+
+Com um catálogo extenso e milhares de transações realizadas diariamente, um dos principais desafios enfrentados por esse tipo de negócio é compreender o comportamento de compra dos clientes e identificar quais produtos têm maior propensão a serem adquiridos em conjunto.
+
+A análise de cestas de mercado (Market Basket Analysis) se apresenta como uma solução estratégica para esse problema, pois permite descobrir associações relevantes entre os produtos com base no histórico de compras. Com isso, é possível:
+- Sugerir produtos complementares no momento da compra;
+- Otimizar a organização de produtos no site;
+- Criar combos promocionais mais eficazes;
+- Personalizar campanhas de marketing baseadas nos padrões de consumo.
+
+Ao aplicar o algoritmo Apriori, buscamos gerar regras de associação que revelem esses padrões de forma automatizada, apoiando decisões que aumentem o valor médio por pedido, melhorem a experiência do usuário e fortaleçam a fidelização de clientes.
+
+
+Fonte de Dados: Os dados foram gerados sinteticamente com base em instruções fornecidas ao chatgpt, detalhando as tabelas e colunas desejadas para simular um cenário de um e-commerce. As tabelas principais incluem:
+
+## 2.1 Preparação dos Dados e Tecnologias Utilizadas
+- **Armazenamento: Snowflake** Os dados brutos das transações são armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A ingestão dos dados no Snowflake é feita por meio de pipelines orquestrados com o Apache Airflow, utilizando o Astro CLI, que permite automatizar a extração, carga e agendamento dos processos.
+- **Transformação dos Dados: dbt Core** As transformações nos dados são realizadas com o dbt Core (Data Build Tool), uma ferramenta que permite a construção de pipelines de transformação baseadas em SQL de forma modular, rastreável e versionada. O objetivo é preparar os dados para análise, aplicando filtros, agregações e reestruturações conforme as regras de negócio.
+Etapas realizadas com dbt:
+  - Stage: limpeza e padronização dos dados brutos (normalização de nomes de produtos, eliminação de nulos, etc.);
+  - Intermediate: estruturação dos dados no formato transacional esperado (pivotagem, agrupamentos por transaction_id);
+  - Final: geração da tabela final com o histórico de compras por transação, em formato adequado para aplicação do algoritmo Apriori.
+- Para manter uma separação clara entre as etapas de orquestração (Airflow), transformação (dbt) e modelagem (Python/Apriori), um repositório Git separado será criado exclusivamente para o projeto dbt. O repositório pode ser acessado em[inserir link]
+  
+- **Sistema de Recomendação com Apriori:** A modelagem das recomendações é feita com base no algoritmo Apriori, que identifica padrões frequentes de ocorrência entre itens em cestas de compra. Para isso, utilizamos Python como linguagem principal e bibliotecas especializadas como: pandas, mlxtendm, snowflake-connector-python, etc. 
+
+https://www.youtube.com/watch?v=Mq5HPAFXrOI: 25 
+
+## 3 Análises
+
+## 4 Sistema de Recomendação com Apriori
+
+## 5 Conclusão Geral e Recomendações
+
+## 6 Instalação e configuração
+
+### 6.1 Instalação do Airflow
 
 Para instalação do Airflow, vamos utilizar o Astro CLI via Homebrew, que é uma abordagem mais prática e produtiva do que rodá-lo diretamente com Docker puro. O Astro simplifica a configuração do ambiente, abstraindo toda a complexidade envolvida em montar arquivos docker-compose.yml e configurá-los manualmente. Com poucos comandos, conseguimos ter um projeto pronto com a estrutura adequada, incluindo a pasta dags, o arquivo requirements.txt, configurações do Airflow e integração com o Docker.
 
@@ -289,7 +326,14 @@ code .
 - Na primeira vez que você usar code . no Ubuntu (WSL), o VSCode poderá iniciar o download e instalação automática do VSCode Server.
 - O VSCode Server é um pequeno serviço instalado dentro do Ubuntu, necessário para permitir que o VSCode do Windows consiga acessar, editar e rodar comandos em arquivos Linux de forma integrada.
 
-### 7.2 Configuração e instalação do dbt Core
+### 6.2 Instalação e configuração do dbt Core
 
 
-### 7.3 Configuração do SnowFlake:
+### 6.3 Configuração do SnowFlake:
+
+Autores:  
+Leticia da Luz
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/leticiadluz/)
+
+Willian Ribeiro
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ribeiro-willian)
