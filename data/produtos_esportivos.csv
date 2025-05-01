@@ -1,0 +1,36 @@
+id_produto,nome_produto,descricao,categoria,preco
+1,Tenis Nike Air Zoom,Tenis de corrida leve e com amortecimento responsivo,Calcados,499.9
+2,Camiseta Dry-Fit Adidas,Camiseta esportiva com tecido que facilita evaporacao,Vestuario,119.9
+3,Bermuda Compressao,Bermuda termica ideal para treinos intensos,Vestuario,89.9
+4,Bola Futebol Adidas,Bola oficial tamanho 5 costurada a maquina,Esportes com bola,129.9
+5,Luva Boxe Everlast,Luva acolchoada com fecho em velcro,Lutas e Artes Marciais,239.9
+6,Halteres 5kg Par,Par de halteres emborrachados,Musculacao,159.9
+7,Colchonete Yoga,Colchonete antiderrapante e lavavel,Yoga e Pilates,99.9
+8,Garrafa Termica 1L,Garrafa com isolamento termico e tampa flip,Acessorios,59.9
+9,Mochila Esportiva Nike,Mochila com compartimento para calcados,Acessorios,189.9
+10,Meia Esportiva 3 pares,Kit com 3 pares de meias cano medio,Vestuario,49.9
+11,Bola Basquete Wilson,Bola oficial com grip antiderrapante,Esportes com bola,139.9
+12,Short Nike Flex,Short masculino com elastico e bolso lateral,Vestuario,109.9
+13,Faixa Elastico Exercicios,Kit com 3 intensidades para treino funcional,Acessorios,69.9
+14,Tenis Adidas RunFalcon,Tenis de corrida com solado em EVA,Calcados,329.9
+15,Corda Pular Pro,Corda ajustavel com rolamento interno,Cardio e Funcional,79.9
+16,Camiseta Regata Puma,Camiseta sem manga para treinos leves,Vestuario,89.9
+17,Tornozeleira Peso 2kg,Par de tornozeleiras com velcro ajustavel,Musculacao,74.9
+18,Dumbbells 3kg Par,Halteres leves para treino funcional e reabilitacao,Musculacao,129.9
+19,Joelheira Esportiva,Joelheira de compressao com protecao lateral,Acessorios,64.9
+20,Manguito Compressao,Manguito para protecao UV e suporte muscular,Acessorios,54.9
+21,Squeeze Plastico 750ml,Garrafa plastica leve com tampa de rosca,Acessorios,29.9
+22,Mochila Hidratacao CamelBak,Mochila com reservatorio de agua interno,Acessorios,249.9
+23,Capacete Ciclismo,Capacete leve com ajuste de tamanho e ventilacao,Ciclismo,199.9
+24,Bomba de Ar Portatil,Bomba manual para enchimento de bolas e pneus,Acessorios,39.9
+25,Manguito Ciclismo,Manguito leve para protecao solar durante pedaladas,Ciclismo,44.9
+26,Roda Abdominal,Equipamento para treino de core e abdominal,Funcional,89.9
+27,Caneleira de Peso 1kg,Par de caneleiras com fecho ajustavel,Musculacao,64.9
+28,Eliptico Domestico,Equipamento cardio compacto para uso residencial,Cardio e Funcional,1699.0
+29,Tapete EVA Tatame 4 un,Tapetes de EVA para montagem de area de treino,Acessorios,89.9
+30,Rolo Liberacao Miofascial,Rolo firme para recuperacao muscular,Recuperacao,79.9
+31,Kit Treino Funcional,"Kit com cones, corda e escada de agilidade",Funcional,119.9
+32,Aparelho Abdominal Simples,Equipamento basico para abdominais com apoio,Musculacao,139.9
+33,Bandagem Boxe 3 metros,Bandagem elastica para protecao das maos,Lutas e Artes Marciais,29.9
+34,Relogio Esportivo Digital,Relogio com cronometro e resistencia a agua,Acessorios,149.9
+35,Camiseta Termica Manga Longa,Camiseta compressiva com protecao solar e respiravel,Vestuario,109.9

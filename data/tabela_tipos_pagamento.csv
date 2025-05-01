@@ -1,0 +1,6 @@
+id_pagamento,tipo_pagamento
+1,Debito
+2,Credito a vista
+3,Credito parcelado
+4,PIX
+5,Boleto

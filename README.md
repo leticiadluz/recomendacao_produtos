@@ -172,7 +172,19 @@ A análise de cestas de mercado (Market Basket Analysis) se apresenta como uma s
 Ao aplicar o algoritmo Apriori, buscamos gerar regras de associação que revelem esses padrões de forma automatizada, apoiando decisões que aumentem o valor médio por pedido, melhorem a experiência do usuário e fortaleçam a fidelização de clientes.
 
 
-Fonte de Dados: Os dados foram gerados sinteticamente com base em instruções fornecidas ao chatgpt, detalhando as tabelas e colunas desejadas para simular um cenário de um e-commerce. As tabelas principais incluem:
+Fonte de Dados: Os dados foram gerados sinteticamente com base em instruções fornecidas ao chatgpt, detalhando as tabelas e colunas desejadas para simular um cenário de um e-commerce. Os dados foram movidos do Windows para a pasta do projeto com o seguinte comando:
+
+tabelas pedidos: id de transação repetido com mesmo produto, data de pedido de 
+1970, id clientes nulos, id de  produtos que não constam na loja(invalido)
+
+tabela clientes , CEPs nulos em algumas linhas, Datas de nascimento inválidas (2024 em diante), Endereços com nomes de rua negativos, Algumas linhas duplicadas propositalmente
+
+```bash
+mkdir -p ~/nome-projeto/nome-pasta
+mv /mnt/disco/Downloads/nome-do-arquivo.csv ~/nome-projeto/nome-pasta
+```
+
+As tabelas principais incluem:
 
 ## 2.1 Preparação dos Dados e Tecnologias Utilizadas
 - **Armazenamento: Snowflake** Os dados brutos das transações são armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A ingestão dos dados no Snowflake é feita por meio de pipelines orquestrados com o Apache Airflow, utilizando o Astro CLI, que permite automatizar a extração, carga e agendamento dos processos.
@@ -185,7 +197,17 @@ Etapas realizadas com dbt:
   
 - **Sistema de Recomendação com Apriori:** A modelagem das recomendações é feita com base no algoritmo Apriori, que identifica padrões frequentes de ocorrência entre itens em cestas de compra. Para isso, utilizamos Python como linguagem principal e bibliotecas especializadas como: pandas, mlxtendm, snowflake-connector-python, etc. 
 
-https://www.youtube.com/watch?v=Mq5HPAFXrOI: 25 
+https://www.youtube.com/watch?v=Mq5HPAFXrOI 25
+
+- É necessário que os dados estejam estruturados no formato de lista de itens por transação, como:  
+['Tenis Nike', 'Meia Esportiva', 'Short Dry-Fit']
+- Observação: mlxtend espera os dados em formato one-hot encoded, ou seja, uma coluna por item com valores binários (1 ou 0 indicando a presença na transação). 
+necessário instalar mxtend
+usar transactionencoder
+transforma uma lista de lista em um array do numpay
+que gera true e falsa e em seguida 0 e 1. 
+
+
 
 ## 3 Análises
 
