@@ -10,13 +10,13 @@ id_cliente,nome_cliente,rua,estado,pais,numero,cep,data_nascimento
 48,Sofia Oliveira,Rua 176,BA,Brasil,922,70835-826,2019-04-26
 37,Juliana Pereira,Rua 150,RS,Brasil,969,98910-609,2018-09-30
 8,Fernando Costa,Rua 152,PR,Brasil,426,25861-659,2006-09-20
-139,Carlos Pereira,Rua 49,CE,Brasil,312,85245-911,2006-03-30
+139,Carlos Pereira,Rua 49,CE,Brasil,-35,85245-911,2006-03-30
 70,Paula Oliveira,Rua 60,SP,Brasil,680,90304-675,2011-05-02
 81,Pedro Pereira,Rua 14,GO,Brasil,146,58039-869,1980-11-29
 57,Carlos Oliveira,Rua 129,PR,Brasil,334,,2013-09-20
 73,Rafael Oliveira,Rua 62,SP,Brasil,610,45946-594,2018-06-09
 148,Aline Silva,Rua 57,SC,Brasil,304,67313-998,1982-11-21
-103,Bianca Oliveira,Rua 173,BA,Brasil,573,28774-656,2012-10-31
+103,Bianca Oliveira,Rua 173,BA,Brasil,0,28774-656,2012-10-31
 13,Joao Oliveira,Rua 58,RJ,Brasil,839,65324-966,2015-06-30
 97,Gabriel Costa,Rua 31,RJ,Brasil,617,56742-159,1991-09-30
 36,Leticia Costa,Rua 130,RJ,Brasil,578,71756-170,1994-05-02
@@ -67,7 +67,7 @@ id_cliente,nome_cliente,rua,estado,pais,numero,cep,data_nascimento
 124,Mateus Silva,Rua 119,PR,Brasil,163,41698-185,2004-08-15
 127,Ricardo Souza,Rua 73,PR,Brasil,96,92735-323,1986-06-27
 15,Carlos Oliveira,Rua 35,SC,Brasil,380,54928-980,2011-12-06
-45,Joao Costa,Rua 90,CE,Brasil,964,46794-643,1989-10-11
+45,Joao Costa,Rua 90,CE,Brasil,0,46794-643,1989-10-11
 95,Carlos Souza,Rua 176,RS,Brasil,768,20561-280,2019-06-12
 110,Fernando Oliveira,Rua 78,SC,Brasil,909,51630-976,2005-11-27
 122,Aline Pereira,Rua 75,RJ,Brasil,999,24043-390,1992-02-28
