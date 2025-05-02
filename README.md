@@ -172,19 +172,49 @@ A análise de cestas de mercado (Market Basket Analysis) se apresenta como uma s
 Ao aplicar o algoritmo Apriori, buscamos gerar regras de associação que revelem esses padrões de forma automatizada, apoiando decisões que aumentem o valor médio por pedido, melhorem a experiência do usuário e fortaleçam a fidelização de clientes.
 
 
-Fonte de Dados: Os dados foram gerados sinteticamente com base em instruções fornecidas ao chatgpt, detalhando as tabelas e colunas desejadas para simular um cenário de um e-commerce. Os dados foram movidos do Windows para a pasta do projeto com o seguinte comando:
-
-tabelas pedidos: id de transação repetido com mesmo produto, data de pedido de 
-1970, id clientes nulos, id de  produtos que não constam na loja(invalido)
-
-tabela clientes , CEPs nulos em algumas linhas, Datas de nascimento inválidas (2024 em diante), Endereços com nomes de rua negativos, Algumas linhas duplicadas propositalmente
+Fonte de Dados: Os dados utilizados neste projeto foram gerados sinteticamente com base em instruções fornecidas ao ChatGPT, com o objetivo de simular um ambiente realista de um e-commerce especializado em artigos esportivos. As tabelas e colunas foram definidas para representar um fluxo completo de compra, desde produtos, clientes e pedidos até métodos de pagamento, permitindo a aplicação prática de regras de associação via Market Basket Analysis.
+Após a geração dos arquivos, os dados foram movidos para a pasta do projeto com o seguinte comando:
 
 ```bash
 mkdir -p ~/nome-projeto/nome-pasta
 mv /mnt/disco/Downloads/nome-do-arquivo.csv ~/nome-projeto/nome-pasta
 ```
+Os dados incluem valores com variações controladas, além de erros intencionais que simulam  situações comuns em bases de dados reais. Essas falhas são fundamentais para testar a qualidade dos modelos de transformação no dbt.
 
+-----
+## PROBLEMAS QUE COLOQUEI PROPISTALMENTE:
+tabelas pedidos: id de transação repetido com mesmo produto, data de pedido de 
+1970, id clientes nulos, id de  produtos que não constam na loja(invalido)
+
+tabela clientes , CEPs nulos em algumas linhas, Datas de nascimento inválidas (2024 em diante), Endereços com nomes de rua negativos, Algumas linhas duplicadas propositalmente
+
+---
 As tabelas principais incluem:
+ - Tabela Pedidos: Contém o histórico detalhado de pedidos realizados pelos clientes. Cada linha representa um item individual comprado em uma transação, incluindo o identificador da transação, do cliente, do produto, da forma de pagamento, a data do pedido e a quantidade solicitada.Campos principais:
+    - id_transacao: Identificador do pedido (pode conter múltiplos itens).
+    - id_cliente: Cliente responsável pela transação.
+    - id_produto: Produto adquirido.
+    - id_pagamento: Método de pagamento utilizado.
+    - data_pedido: Data em que a compra foi registrada.
+    - quantidade: Quantidade do item comprado.
+
+- Tabela Tipos Pagamento: Tabela de apoio que contém o mapeamento entre os identificadores de pagamento e seus respectivos nomes legíveis. É usada para enriquecer a tabela_pedidos com descrições mais compreensíveis do meio de pagamento.Campos principais:
+  - id_pagamento: Código do método de pagamento.
+  - tipo_pagamento: Descrição textual (ex: "Debito", "PIX").
+
+- Tabela Clientes: Contém os dados cadastrais dos clientes que realizaram pedidos. Permite cruzar informações pessoais e geográficas com o histórico de compras para análises de segmentação e validação. Campos principais:
+  - id_cliente: Identificador único do cliente.
+  - nome_cliente: Nome completo do cliente.
+  - rua, numero, estado, pais, cep: Endereço do cliente.
+  - data_nascimento: Data de nascimento do cliente.
+
+- Tabela Produtos Esportivos: Tabela contendo o catálogo de produtos esportivos disponíveis no e-commerce. Cada linha representa um produto único, com informações detalhadas como nome, descrição, categoria e preço. Campos principais:
+  - id_produto: Identificador único do produto.
+  - nome_produto: Nome comercial do item.
+  - descricao: Detalhes do produto, incluindo finalidade ou características técnicas
+  - categoria: Categoria geral do produto (ex: Vestuario, Musculacao, Acessorios).
+  - preco: Valor unitário do produto em reais (R$).
+
 
 ## 2.1 Preparação dos Dados e Tecnologias Utilizadas
 - **Armazenamento: Snowflake** Os dados brutos das transações são armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A ingestão dos dados no Snowflake é feita por meio de pipelines orquestrados com o Apache Airflow, utilizando o Astro CLI, que permite automatizar a extração, carga e agendamento dos processos.
@@ -347,6 +377,59 @@ code .
 - Esse comando abrirá a pasta do projeto diretamente no VSCode do Windows.
 - Na primeira vez que você usar code . no Ubuntu (WSL), o VSCode poderá iniciar o download e instalação automática do VSCode Server.
 - O VSCode Server é um pequeno serviço instalado dentro do Ubuntu, necessário para permitir que o VSCode do Windows consiga acessar, editar e rodar comandos em arquivos Linux de forma integrada.
+
+### 6.1.1  Instalação Airflow: Projeto Astro Clonado
+1- Instale o Ubuntu 22.04 LTS e confirme se ele foi instalado com sucesso com:
+
+```bash
+wsl -l -v
+```
+2 - Instale o Homebrew:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+3 - Adicione o Homebre ao Path e confirme que ele está funcionando:
+```bash
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+brew --version
+```
+4 - Instale Compiladores:
+```bash
+sudo apt-get update && sudo apt-get install -y build-essential clang
+```
+5  - Instale o Astro CLI e confirme que ele está funcionando corretamente:
+```bash
+brew install astronomer/tap/astro
+
+astro version
+```
+6 - Integre o Docker Desktop  com Ubuntu:
+- Settings → Resources → WSL Integration:Ative a integração para o Ubuntu
+
+7 - Confirme que o docker foi reconhecido:
+```bash
+docker --version
+```
+8-  Clone o repositório com o projeto Astro, instala também o Git:
+```bash
+sudo apt update && sudo apt install git -y
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
+
+```
+WILL, rode:
+```bash
+sudo apt update && sudo apt install git -y
+git clone https://github.com/leticiadluz/recomendacao_produtos.git
+cd recomendacao_produtos
+```
+9 - Rode o projeto Astro clonado:
+```bash
+cd ~/seu-repositorio
+astro dev start
+```
 
 ### 6.2 Instalação e configuração do dbt Core
 
