@@ -417,14 +417,8 @@ docker --version
 sudo apt update && sudo apt install git -y
 git clone https://github.com/seu-usuario/seu-repositorio.git
 cd seu-repositorio
+```
 
-```
-WILL, rode:
-```bash
-sudo apt update && sudo apt install git -y
-git clone https://github.com/leticiadluz/recomendacao_produtos.git
-cd recomendacao_produtos
-```
 9 - Rode o projeto Astro clonado:
 ```bash
 cd ~/seu-repositorio
@@ -432,13 +426,117 @@ astro dev start
 ```
 
 ### 6.2 Instalação e configuração do dbt Core
+1 - O primeiro passo consiste em criar um novo repositório Git separado do projeto original. Este repositório será exclusivamente responsável por versionar os modelos de transformação do dbt, o que melhora a organização, permite deploys independentes e facilita a colaboração entre equipes.
+Após a criação, clone o repositório localmente em uma pasta do seu diretório de trabalho. Esse diretório será a base do seu projeto dbt.
 
+O repositório dbt pode ser acessado  em: [Recomendação de Produtos dbt](https://github.com/leticiadluz/recomendacao_produtos_dbt)
+
+2 -  Crie e ative o ambiente virtual Python:
+Com o repositório clonado, crie um ambiente virtual para isolar as dependências do dbt neste projeto, evitando conflitos com outros ambientes Python no seu sistema:
+```bash
+python -m venv venv
+```
+
+Depois, ative o ambiente (no Windows):
+```bash
+venv\Scripts\activate
+```
+A ativação garante que os pacotes Python sejam instalados localmente dentro do projeto e não globalmente no sistema. Isso ajuda a manter as dependências organizadas, facilita a reprodução do ambiente em outras máquinas e evita conflitos com outras versões do dbt ou bibliotecas.
+
+3 - Instalar o dbt e o adaptador do seu data warehouse.
+Após ativar o ambiente virtual, o próximo passo é instalar o dbt-core junto com o adaptador específico para o seu banco de dados, pois o dbt sozinho não consegue se conectar ao Snowflake, BigQuery, Redshift, etc
+
+```bash
+python -m pip install --upgrade pip
+pip install dbt-snowflake
+```
+Como versões mais antigas do pip podem não conseguir resolver corretamente dependências modernas ou instalar versões mais recentes de bibliotecas, também atualizamos o pip.
+
+4 - Inicializar o projeto dbt no repositório clonado:   
+Com o ambiente virtual ativo e os pacotes instalados, o próximo passo é inicializar o projeto dbt dentro da pasta do repositório que você clonou. Se você já está dentro da pasta do projeto, use o comando:
+
+```bash
+dbt init .
+```
+
+Durante a execução, o dbt vai solicitar que você informe um nome para o projeto (ex: recomendacao_produtos_dbt).
+Mesmo utilizando dbt init . , o dbt irá criar uma subpasta com o nome informado, mesmo que ele seja igual ao da pasta atual. 
+
+Mantenha essa subpasta criada automaticamente como o diretório principal do seu projeto dbt. Isso segue boas práticas, pois separa claramente o código de transformação (dbt) de outros componentes do repositório (como ambiente venv, logs, scripts, etc).
+
+Após fornecer o nome do projeto, o dbt vai perguntar qual banco de dados você está usando. Selecione a opção correspondente. Por exemplo, para o Snowflake
+```bash
+Which database would you like to use?
+[1] snowflake
+Enter a number: 1
+```
+
+5 - Em seguida, ele pedirá as credenciais e dados de conexão, como:
+  - account 
+  - user
+  - password
+  - role 
+  - warehouse
+  - database
+  - schema
+
+Essas informações serão salvas automaticamente no arquivo profiles.yml. 
+
+O arquivo profiles.yml, que contém as credenciais de conexão com o banco de dados, é salvo automaticamente na pasta do usuário (C:\Users\SeuUsuario\.dbt\), e não dentro do projeto.
+Essa separação é intencional e segue boas práticas: evita que dados sensíveis sejam versionados junto com o código e permite que múltiplos projetos dbt compartilhem o mesmo perfil de conexão.Isso não interfere no funcionamento do projeto, o dbt sempre busca o profiles.yml.
+
+6 - Acessar a pasta correta do projeto e rodar o dbt debug:
+Após o comando dbt init, o projeto dbt provavelmente foi criado em uma subpasta com o nome que você informou.Para garantir que todos os comandos funcionem corretamente, entre na subpasta com o comando:
+
+```bash
+cd recomendacao_produtos_dbt
+```
+Agora, valide se o ambiente está pronto com:
+
+```bash
+dbt debug
+```
+Se tudo estiver certo, você verá: All checks passed!
+
+7-  Carregar arquivos CSV como tabelas usando dbt seed:  
+O dbt oferece uma forma prática de carregar os arquivos CSV com os dados de teste automaticamente no banco, usando a funcionalidade chamada seeds.
+ - Adicione os arquivos necessários dentro da pasta seeds. 
+ - Rode o comando para carregar os arquivos CSV no Snowflake:
+ 
+ ```bash
+ dbt seed
+```
+Se tudo deu certo você verá suas tabelas no SnowFlake:
+![alt text](Imagens/snowflake_tbls.png)
+
+A parte de Transformação dos Dados está descrita em:
+[Recomendação de Produtos dbt](https://github.com/leticiadluz/recomendacao_produtos_dbt)
 
 ### 6.3 Configuração do SnowFlake:
+1 - Criando conta gratuita no Snowflake
+  - Acesse: https://signup.snowflake.com
+  - Preencha:
+    - Nome completo
+    - E-mail 
+    - Nome da empresa
+    - Escolha uma região (ex: AWS São Paulo)
+    - Escolha um cloud provider (pode deixar como AWS)
+- Clique em "Continue"
+- Você receberá um e-mail com o link de ativação.  Ao clicar, defina:
+  - Nome de usuário
+  - Senha
+  - Nome da conta 
+- Após login, você cairá no Snowflake Web UI
 
-Autores:  
+- O que vem pronto na conta gratuita:
+  - Um warehouse chamado COMPUTE_WH (tamanho pequeno, bom para testes).
+  - Um database chamado SNOWFLAKE_SAMPLE_DATA com dados de exemplo.
+- Você pode criar novos databases e schemas.
+
+Autor:  
 Leticia da Luz
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/leticiadluz/)
 
-Willian Ribeiro
+Revisor:   
+Willian Ribeiro 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ribeiro-willian)
