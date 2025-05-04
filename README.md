@@ -217,12 +217,12 @@ As tabelas principais incluem:
 
 
 ## 2.1 Preparação dos Dados e Tecnologias Utilizadas
-- **Armazenamento: Snowflake** Os dados brutos das transações serão armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A primeira ingestão dos dados foi realizada por meio do comando dbt seed, que permite carregar dados estáticos diretamente no Snowflake como ponto de partida para o pipeline. As transformações subsequentes serão orquestradas com o Apache Airflow, utilizando o Astro CLI, o que possibilita a automação dos processos de extração, transformação e agendamento de cargas de dados.
+- **Armazenamento: Snowflake** Os dados brutos das transações serão armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A primeira ingestão dos dados foi realizada por meio do comando dbt seed, que permite carregar dados diretamente no Snowflake como ponto de partida para o pipeline. As transformações subsequentes serão orquestradas com o Apache Airflow, utilizando o Astro CLI, o que possibilita a automação dos processos de transformação.
 
 - **Transformação dos Dados: dbt Core** As transformações nos dados são realizadas com o dbt Core (Data Build Tool), uma ferramenta de transformação baseada em SQL que permite construir pipelines modulares, auditáveis e versionadas. O objetivo é preparar os dados para análise, aplicando regras de negócio como filtros, agregações, renomeações e reestruturações. Dentro da abordagem de ELT (Extract, Load, Transform), os dados são primeiro carregados no Snowflake e, em seguida, transformados diretamente dentro do data warehouse com dbt. O fluxo de transformação no dbt segue a estrutura padrão em camadas:
   - Staging: limpeza, padronização e renomeação de colunas dos dados brutos. Exemplos: normalização de nomes de produtos, eliminação de nulos, tipagem de colunas.
-  - Intermediate (ou core): estruturação dos dados em formato analítico intermediário, como joins entre tabelas, pivotagens e agregações por transaction_id.
-  - Marts: geração de tabelas finais voltadas para o consumo analítico. N
+  - Intermediate: estruturação dos dados em formato analítico intermediário, como joins entre tabelas, pivotagens e agregações por transaction_id.
+  - Marts: geração de tabelas finais voltadas para o consumo analítico. 
 
   Para manter a separação de responsabilidades entre orquestração (Airflow), transformação (dbt) e modelagem analítica (Python/Apriori), será mantido um repositório Git separado exclusivamente para o projeto dbt. O repositório pode ser acessado em [Recomendação de Produtos dbt](https://github.com/leticiadluz/recomendacao_produtos_dbt).
 
