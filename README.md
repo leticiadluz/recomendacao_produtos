@@ -217,13 +217,16 @@ As tabelas principais incluem:
 
 
 ## 2.1 Preparação dos Dados e Tecnologias Utilizadas
-- **Armazenamento: Snowflake** Os dados brutos das transações são armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A ingestão dos dados no Snowflake é feita por meio de pipelines orquestrados com o Apache Airflow, utilizando o Astro CLI, que permite automatizar a extração, carga e agendamento dos processos. VERIFICAR 
-- **Transformação dos Dados: dbt Core** As transformações nos dados são realizadas com o dbt Core (Data Build Tool), uma ferramenta que permite a construção de pipelines de transformação baseadas em SQL de forma modular, rastreável e versionada. O objetivo é preparar os dados para análise, aplicando filtros, agregações e reestruturações conforme as regras de negócio. VERIFICAR
-Etapas realizadas com dbt:
-  - Stage: limpeza e padronização dos dados brutos (normalização de nomes de produtos, eliminação de nulos, etc.);
-  - Intermediate: estruturação dos dados no formato transacional esperado (pivotagem, agrupamentos por transaction_id);
-  - Final: geração da tabela final com o histórico de compras por transação, em formato adequado para aplicação do algoritmo Apriori.
-- Para manter uma separação clara entre as etapas de orquestração (Airflow), transformação (dbt) e modelagem (Python/Apriori), um repositório Git separado será criado exclusivamente para o projeto dbt. O repositório pode ser acessado em[inserir link]
+- **Armazenamento: Snowflake** Os dados brutos das transações serão armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A primeira ingestão dos dados foi realizada por meio do comando dbt seed, que permite carregar dados estáticos diretamente no Snowflake como ponto de partida para o pipeline. As transformações subsequentes serão orquestradas com o Apache Airflow, utilizando o Astro CLI, o que possibilita a automação dos processos de extração, transformação e agendamento de cargas de dados.
+
+- **Transformação dos Dados: dbt Core** As transformações nos dados são realizadas com o dbt Core (Data Build Tool), uma ferramenta de transformação baseada em SQL que permite construir pipelines modulares, auditáveis e versionadas. O objetivo é preparar os dados para análise, aplicando regras de negócio como filtros, agregações, renomeações e reestruturações. Dentro da abordagem de ELT (Extract, Load, Transform), os dados são primeiro carregados no Snowflake e, em seguida, transformados diretamente dentro do data warehouse com dbt. O fluxo de transformação no dbt segue a estrutura padrão em camadas:
+  - Staging: limpeza, padronização e renomeação de colunas dos dados brutos. Exemplos: normalização de nomes de produtos, eliminação de nulos, tipagem de colunas.
+  - Intermediate (ou core): estruturação dos dados em formato analítico intermediário, como joins entre tabelas, pivotagens e agregações por transaction_id.
+  - Marts: geração de tabelas finais voltadas para o consumo analítico. N
+
+  Para manter a separação de responsabilidades entre orquestração (Airflow), transformação (dbt) e modelagem analítica (Python/Apriori), será mantido um repositório Git separado exclusivamente para o projeto dbt. O repositório pode ser acessado em [Recomendação de Produtos dbt](https://github.com/leticiadluz/recomendacao_produtos_dbt).
+
+  Referência: [How we structure our dbt projects](https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview)
   
 - **Sistema de Recomendação com Apriori:** A modelagem das recomendações é feita com base no algoritmo Apriori, que identifica padrões frequentes de ocorrência entre itens em cestas de compra. Para isso, utilizamos Python como linguagem principal e bibliotecas especializadas como: pandas, mlxtendm, snowflake-connector-python, etc. 
 
@@ -247,7 +250,25 @@ que gera true e falsa e em seguida 0 e 1.
 
 ## 6 Instalação e configuração
 
-### 6.1 Instalação do Airflow
+### 6.1 Instalação do Docker:
+ 
+1 - Certifique-se de que o Docker está instalado em seu sistema. Você pode baixá-lo e instalá-lo a partir do site em: [Docker](https://www.docker.com/).
+
+2 - Usuários de Windows -> Configure o WSL  
+
+Se você está utilizando o Windows, será necessário instalar e configurar o Windows Subsystem for Linux (WSL). Atualize o WSL utilizando o seguinte comando no terminal:
+```bash
+wsl --update
+```
+3 - Testando o Docker: Após a instalação, teste se o Docker está funcionando corretamente executando no PowerShell:
+```bash 
+docker --version
+```
+
+Se o comando rodar com sucesso, o Docker está pronto para uso.
+
+
+### 6.2 Instalação do Airflow
 
 Para instalação do Airflow, vamos utilizar o Astro CLI via Homebrew, que é uma abordagem mais prática e produtiva do que rodá-lo diretamente com Docker puro. O Astro simplifica a configuração do ambiente, abstraindo toda a complexidade envolvida em montar arquivos docker-compose.yml e configurá-los manualmente. Com poucos comandos, conseguimos ter um projeto pronto com a estrutura adequada, incluindo a pasta dags, o arquivo requirements.txt, configurações do Airflow e integração com o Docker.
 
@@ -378,7 +399,7 @@ code .
 - Na primeira vez que você usar code . no Ubuntu (WSL), o VSCode poderá iniciar o download e instalação automática do VSCode Server.
 - O VSCode Server é um pequeno serviço instalado dentro do Ubuntu, necessário para permitir que o VSCode do Windows consiga acessar, editar e rodar comandos em arquivos Linux de forma integrada.
 
-### 6.1.1  Instalação Airflow: Projeto Astro Clonado
+### 6.2.1  Instalação Airflow: Projeto Astro Clonado
 1- Instale o Ubuntu 22.04 LTS e confirme se ele foi instalado com sucesso com:
 
 ```bash
@@ -425,7 +446,7 @@ cd ~/seu-repositorio
 astro dev start
 ```
 
-### 6.2 Instalação e configuração do dbt Core
+### 6.3 Instalação e configuração do dbt Core
 1 - O primeiro passo consiste em criar um novo repositório Git separado do projeto original. Este repositório será exclusivamente responsável por versionar os modelos de transformação do dbt, o que melhora a organização, permite deploys independentes e facilita a colaboração entre equipes.
 Após a criação, clone o repositório localmente em uma pasta do seu diretório de trabalho. Esse diretório será a base do seu projeto dbt.
 
@@ -513,7 +534,7 @@ Se tudo deu certo você verá suas tabelas no SnowFlake:
 A parte de Transformação dos Dados está descrita em:
 [Recomendação de Produtos dbt](https://github.com/leticiadluz/recomendacao_produtos_dbt)
 
-### 6.3 Configuração do SnowFlake:
+### 6.4 Configuração do SnowFlake:
 1 - Criando conta gratuita no Snowflake
   - Acesse: https://signup.snowflake.com
   - Preencha:
