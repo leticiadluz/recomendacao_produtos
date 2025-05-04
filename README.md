@@ -506,7 +506,7 @@ O dbt oferece uma forma prática de carregar os arquivos CSV com os dados de tes
  ```bash
  dbt seed
 ```
-Se tudo deu certo você verá suas tabelas no SnowFlake:
+Se tudo deu certo você verá suas tabelas no SnowFlake:  
 
 ![alt text](Imagens/snowflake_tbls.png)
 
