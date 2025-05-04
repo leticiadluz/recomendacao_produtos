@@ -217,8 +217,8 @@ As tabelas principais incluem:
 
 
 ## 2.1 Preparação dos Dados e Tecnologias Utilizadas
-- **Armazenamento: Snowflake** Os dados brutos das transações são armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A ingestão dos dados no Snowflake é feita por meio de pipelines orquestrados com o Apache Airflow, utilizando o Astro CLI, que permite automatizar a extração, carga e agendamento dos processos.
-- **Transformação dos Dados: dbt Core** As transformações nos dados são realizadas com o dbt Core (Data Build Tool), uma ferramenta que permite a construção de pipelines de transformação baseadas em SQL de forma modular, rastreável e versionada. O objetivo é preparar os dados para análise, aplicando filtros, agregações e reestruturações conforme as regras de negócio.
+- **Armazenamento: Snowflake** Os dados brutos das transações são armazenados no Snowflake, um data warehouse em nuvem altamente escalável e otimizado para processamento analítico. A ingestão dos dados no Snowflake é feita por meio de pipelines orquestrados com o Apache Airflow, utilizando o Astro CLI, que permite automatizar a extração, carga e agendamento dos processos. VERIFICAR 
+- **Transformação dos Dados: dbt Core** As transformações nos dados são realizadas com o dbt Core (Data Build Tool), uma ferramenta que permite a construção de pipelines de transformação baseadas em SQL de forma modular, rastreável e versionada. O objetivo é preparar os dados para análise, aplicando filtros, agregações e reestruturações conforme as regras de negócio. VERIFICAR
 Etapas realizadas com dbt:
   - Stage: limpeza e padronização dos dados brutos (normalização de nomes de produtos, eliminação de nulos, etc.);
   - Intermediate: estruturação dos dados no formato transacional esperado (pivotagem, agrupamentos por transaction_id);
@@ -507,6 +507,7 @@ O dbt oferece uma forma prática de carregar os arquivos CSV com os dados de tes
  dbt seed
 ```
 Se tudo deu certo você verá suas tabelas no SnowFlake:
+
 ![alt text](Imagens/snowflake_tbls.png)
 
 A parte de Transformação dos Dados está descrita em:
