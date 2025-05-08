@@ -473,7 +473,7 @@ pip install dbt-snowflake
 ```
 Como versões mais antigas do pip podem não conseguir resolver corretamente dependências modernas ou instalar versões mais recentes de bibliotecas, também atualizamos o pip.
 
-4 - Inicializar o projeto dbt no repositório clonado:   
+4 - Inicializar o projeto dbt no repositório:   
 Com o ambiente virtual ativo e os pacotes instalados, o próximo passo é inicializar o projeto dbt dentro da pasta do repositório que você clonou. Se você já está dentro da pasta do projeto, use o comando:
 
 ```bash
@@ -481,9 +481,6 @@ dbt init .
 ```
 
 Durante a execução, o dbt vai solicitar que você informe um nome para o projeto (ex: recomendacao_produtos_dbt).
-Mesmo utilizando dbt init . , o dbt irá criar uma subpasta com o nome informado, mesmo que ele seja igual ao da pasta atual. 
-
-Mantenha essa subpasta criada automaticamente como o diretório principal do seu projeto dbt. Isso segue boas práticas, pois separa claramente o código de transformação (dbt) de outros componentes do repositório (como ambiente venv, logs, scripts, etc).
 
 Após fornecer o nome do projeto, o dbt vai perguntar qual banco de dados você está usando. Selecione a opção correspondente. Por exemplo, para o Snowflake
 ```bash
@@ -504,10 +501,9 @@ Enter a number: 1
 Essas informações serão salvas automaticamente no arquivo profiles.yml. 
 
 O arquivo profiles.yml, que contém as credenciais de conexão com o banco de dados, é salvo automaticamente na pasta do usuário (C:\Users\SeuUsuario\.dbt\), e não dentro do projeto.
-Essa separação é intencional e segue boas práticas: evita que dados sensíveis sejam versionados junto com o código e permite que múltiplos projetos dbt compartilhem o mesmo perfil de conexão.Isso não interfere no funcionamento do projeto, o dbt sempre busca o profiles.yml.
+Essa separação é intencional e segue boas práticas: evita que dados sensíveis sejam versionados junto com o código e permite que múltiplos projetos dbt compartilhem o mesmo perfil de conexão. Isso não interfere no funcionamento do projeto, o dbt sempre busca o profiles.yml.
 
-6 - Acessar a pasta correta do projeto e rodar o dbt debug:
-Após o comando dbt init, o projeto dbt provavelmente foi criado em uma subpasta com o nome que você informou.Para garantir que todos os comandos funcionem corretamente, entre na subpasta com o comando:
+6 - Rodar o dbt debug. Dentro do projeto execute:
 
 ```bash
 cd recomendacao_produtos_dbt
