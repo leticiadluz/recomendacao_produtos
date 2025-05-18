@@ -181,14 +181,6 @@ mv /mnt/disco/Downloads/nome-do-arquivo.csv ~/nome-projeto/nome-pasta
 ```
 Os dados incluem valores com variações controladas, além de erros intencionais que simulam  situações comuns em bases de dados reais. Essas falhas são fundamentais para testar a qualidade dos modelos de transformação no dbt.
 
------
-## PROBLEMAS QUE COLOQUEI PROPISTALMENTE:
-tabelas pedidos: id de transação repetido com mesmo produto, data de pedido de 
-1970, id clientes nulos, id de  produtos que não constam na loja(invalido)
-
-tabela clientes , CEPs nulos em algumas linhas, Datas de nascimento inválidas (2024 em diante), Endereços com nomes de rua negativos, Algumas linhas duplicadas propositalmente
-
----
 As tabelas principais incluem:
  - Tabela Pedidos: Contém o histórico detalhado de pedidos realizados pelos clientes. Cada linha representa um item individual comprado em uma transação, incluindo o identificador da transação, do cliente, do produto, da forma de pagamento, a data do pedido e a quantidade solicitada.Campos principais:
     - id_transacao: Identificador do pedido (pode conter múltiplos itens).
@@ -530,7 +522,7 @@ Se tudo deu certo você verá suas tabelas no SnowFlake:
 A parte de Transformação dos Dados está descrita em:
 [Recomendação de Produtos dbt](https://github.com/leticiadluz/recomendacao_produtos_dbt)
 
-### 6.4 Configuração do SnowFlake:
+### 6.4 Configuração do SnowFlake
 1 - Criando conta gratuita no Snowflake
   - Acesse: https://signup.snowflake.com
   - Preencha:
@@ -550,6 +542,78 @@ A parte de Transformação dos Dados está descrita em:
   - Um warehouse chamado COMPUTE_WH (tamanho pequeno, bom para testes).
   - Um database chamado SNOWFLAKE_SAMPLE_DATA com dados de exemplo.
 - Você pode criar novos databases e schemas.
+
+### 6.5 Orquestrando as transformações do dbt com Airflow
+
+1 - No Dockerfile que vem a imagem oficial do Astronomer, precisamos adicionar o dbt-core que é o mecanismo principal do dbt, o dbt-snowflake que é o adaptador que permite o dbt se conectar ao Snowflake, o git, que será usado para baixar o projeto dbt de um repositório GitHub e também precisamos garantir que o diretório de destino já exista:
+
+ ```bash
+FROM quay.io/astronomer/astro-runtime:12.7.1
+
+RUN pip install dbt-core dbt-snowflake
+
+USER root
+
+RUN apt-get update && apt-get install -y git
+
+RUN mkdir -p /home/astro/.dbt && chown astro:astro /home/astro/.dbt
+
+USER astro
+```
+Após adicioná-los no Dockerfile, será necessário reconstruir a imagem. Durante o processo de construção da nova imagem o Docker baixa e instala localmente dentro da imagem Docker os pacotes:
+- dbt-core
+- dbt-snowflake
+
+2 - Também temos que garantir que o arquivo profiles.yml esteja visível para o Docker. No meu caso, o projeto do dbt está no Windows, então, precisamos garantir que o Airflow (rodando no Docker via WSL) consiga acessar o seu profiles.yml com segurança.
+
+Copiando o seu profiles.yml do Windows para a pasta do projeto Astro no WSL:
+ 
+ ```bash
+copy "C:\Users\user\.dbt\profiles.yml" "\\wsl$\Ubuntu-22.04\home\user\projeto\include\profiles.yml"
+```
+
+3 - Edite o arquivo docker-compose.override.yml para garantir que o container tenha acesso ao arquivo no caminho que o dbt espera:
+
+ ```bash
+version: "3"
+services:
+  postgres:
+    ports:
+      - "5433:5432"
+
+  webserver:
+    volumes:
+      - ./include/profiles.yml:/home/astro/.dbt/profiles.yml
+
+  scheduler:
+    volumes:
+      - ./include/profiles.yml:/home/astro/.dbt/profiles.yml
+```
+
+4 -  Confirmar se os metadados foram definidos corretamente no reposiório dbt:
+
+No projeto do dbt precisamos confirmar que os arquivos schema.yml foram mapeados corretamente para cada camada. 
+
+No dbt, o arquivo schema.yml é onde definimos os metadados, testes e estrutura de validação dos modelos. Ele é essencial principalmente quando se trabalha com a função source(). 
+
+No dbt, usamos source() para acessar tabelas brutas que não são transformadas pelo próprio dbt, como dados diretamente do Snowflake. Por isso, ao usar source(), é obrigatório declarar essas tabelas no schema.yml, informando nome, schema e banco de origem. Isso permite que o dbt reconheça e valide essas fontes corretamente. 
+
+Já o ref() aponta para modelos internos criados dentro do projeto, que o dbt já conhece e controla. Como esses modelos já fazem parte da cadeia de transformação, o uso de ref() não exige que eles estejam declarados no schema.yml. Assim, por exemplo, os modelos da camada mart, que usam ref() para acessar dados tratados nas camadas anteriores, não precisam obrigatoriamente estar no schema.yml.
+
+Quando rodamos dbt run, ele usa o schema.yml indiretamente para entender os relacionamentos e ordens de execução entre modelos se houver dependências definidas por ref() ou source() e isto é essencial para projetos que utilizam orquestração com Airflow.
+
+5 - Depois destas confirmações, podemos criar nossa DAG e reconstruir a imagem do Docker para aplicar estas transformações. Primeiro, pare o contêiner e garanta que os volumes antigos não persistam e depois suba o ambiente novamente:
+
+ ```bash
+astro dev stop
+docker system prune -f
+astro dev start
+```
+
+6 - Agora você ja pode criar sua DAG. Se tudo ocorrer bem, você verá os seguintes logs:
+![alt text](Imagens/airflow.png)
+
+
 
 Autor:  
 Leticia da Luz

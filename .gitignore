@@ -11,3 +11,5 @@ airflow.cfg
 airflow.db
 *.code-workspace
 tests/
+/include/profiles.yml
+

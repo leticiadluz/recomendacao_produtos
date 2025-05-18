@@ -1,0 +1,4 @@
+snowflake-connector-python
+pandas
+scikit-learn
+pyyaml
