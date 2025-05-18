@@ -1,4 +1,13 @@
+version: "3"
 services:
   postgres:
     ports:
       - "5433:5432"
+
+  webserver:
+    volumes:
+      - ./include/profiles.yml:/home/astro/.dbt/profiles.yml
+
+  scheduler:
+    volumes:
+      - ./include/profiles.yml:/home/astro/.dbt/profiles.yml
