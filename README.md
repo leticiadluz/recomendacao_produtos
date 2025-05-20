@@ -222,7 +222,6 @@ As tabelas principais incluem:
   
 - **Sistema de Recomendação com Apriori:** A modelagem das recomendações é feita com base no algoritmo Apriori, que identifica padrões frequentes de ocorrência entre itens em cestas de compra. Para isso, utilizamos Python como linguagem principal e bibliotecas especializadas como: pandas, mlxtendm, snowflake-connector-python, etc. 
 
-https://www.youtube.com/watch?v=Mq5HPAFXrOI 25
 
 - É necessário que os dados estejam estruturados no formato de lista de itens por transação, como:  
 ['Tenis Nike', 'Meia Esportiva', 'Short Dry-Fit']
@@ -233,12 +232,13 @@ transforma uma lista de lista em um array do numpay
 que gera true e falsa e em seguida 0 e 1. 
 
 
-
-## 3 Análises
+## 3 Fluxo de Tratamento dbt + Airflow
 
 ## 4 Sistema de Recomendação com Apriori
 
-## 5 Conclusão Geral e Recomendações
+https://www.youtube.com/watch?v=Mq5HPAFXrOI 25
+
+## 5 Conclusão Geral 
 
 ## 6 Instalação e configuração
 
@@ -610,8 +610,27 @@ docker system prune -f
 astro dev start
 ```
 
-6 - Agora você ja pode criar sua DAG. Se tudo ocorrer bem, você verá os seguintes logs:
+6 - Agora já podemos criar a DAG e executá-la. Se tudo ocorrer bem, você verá os seguintes logs:
+
 ![alt text](Imagens/airflow.png)
+
+### 6.6 Preparando o ambiente para o modelo:
+
+1- Instale as dependências do projeto: 
+
+ ```bash
+pip3 install -r requirements.txt
+```
+
+2 - Adicione os scripts ao PATH:
+ ```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
+```
+3 - Execute os scripts com o seguinte comando:
+
+ ```bash
+python3 pasta/arquivo.py
+```
 
 
 
