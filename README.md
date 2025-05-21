@@ -223,14 +223,14 @@ As tabelas principais incluem:
 - **Sistema de Recomendação com Apriori:** A modelagem das recomendações é feita com base no algoritmo Apriori, que identifica padrões frequentes de ocorrência entre itens em cestas de compra. Para isso, utilizamos Python como linguagem principal e bibliotecas especializadas como: pandas, mlxtendm, snowflake-connector-python, etc. 
 
 
-- É necessário que os dados estejam estruturados no formato de lista de itens por transação, como:  
-['Tenis Nike', 'Meia Esportiva', 'Short Dry-Fit']
-- Observação: mlxtend espera os dados em formato one-hot encoded, ou seja, uma coluna por item com valores binários (1 ou 0 indicando a presença na transação). 
-necessário instalar mxtend
-usar transactionencoder
-transforma uma lista de lista em um array do numpay
-que gera true e falsa e em seguida 0 e 1. 
+- É necessário que os dados estejam estruturados no formato de lista de lista de itens comprados juntos, como:  
+[['Tenis Nike', 'Meia Esportiva', 'Short Dry-Fit'],
+['Tenis Nike', 'Camiseta Puma'], ...]
+- Observação: O algoritmo Apriori da biblioteca mlxtend também espera como entrada um DataFrame booleano. Exemplo:
 
+![alt text](Imagens/bool.png)
+ 
+Referência: [TransactionEncoder: Convert item lists into transaction data for frequent itemset mining](https://rasbt.github.io/mlxtend/user_guide/preprocessing/TransactionEncoder/)
 
 ## 3 Fluxo de Tratamento dbt + Airflow
 
