@@ -2,10 +2,31 @@
 # Recomendação de Produtos com Análise de Cesta de Mercado
 
 ## Resumo 
+Este projeto foi desenvolvido com base em dados sintéticos simulando um ambiente de e-commerce especializado em artigos esportivos. O objetivo foi aplicar a técnica de Market Basket Analysis para identificar padrões de compra entre produtos e gerar recomendações com base em regras de associação.
 
-## 
+Os dados foram construídos para representar um fluxo completo de compra, incluindo tabelas de clientes, pedidos, produtos e formas de pagamento. Erros intencionais foram incluídos para simular inconsistências comuns em bases reais e testar o processo de tratamento dos dados.
 
-### 1 Introdução
+A primeira etapa consistiu na ingestão dos arquivos .csv no data warehouse **Snowflake**, utilizando o comando dbt seed. Em seguida, os dados passaram por uma série de transformações com o **dbt Core**, estruturadas em três camadas:
+
+**Staging:** renomeação e padronização de colunas, remoção de duplicatas, limpeza de valores inconsistentes e aplicação de testes de qualidade (ex: not_null, unique, expression_is_true).
+
+**Intermediate:** aplicação de regras de negócio, como filtragem por data de compra, consistência entre produtos e clientes, validação de idade mínima e deduplicação.
+
+**Marts:** geração de uma tabela consolidada por transação, agregando os produtos comprados em listas formatadas para uso com algoritmos de regras de associação.
+
+As transformações foram orquestradas com o **Apache Airflow**, utilizando o **Astro CLI**, permitindo a automação das etapas de carregamento, validação e execução do pipeline dbt.
+
+Para a etapa analítica, foi aplicado o algoritmo **Apriori**, com auxílio das bibliotecas Python pandas, mlxtend e snowflake-connector-python. As regras de associação foram avaliadas com base nas métricas de suporte e lift, sendo este último o principal critério para selecionar as associações mais relevantes.
+
+Entre os resultados obtidos, destacam-se:
+- Produtos com suporte acima de 1% foram priorizados para análise.
+- Diversas regras com lift > 2 foram identificadas, indicando fortes relações entre itens
+- As recomendações geradas podem ser usadas para criar sugestões personalizadas, ofertas combinadas e organização de produtos no site.
+
+O projeto integra boas práticas de engenharia de dados e modelagem analítica, com separação clara entre camadas, versionamento com Git e controle de execução com Airflow. A estrutura final é reutilizável, interpretável e pode ser adaptada para aplicações em ambientes de produção ou testes com dados reais.
+
+
+## 1 Introdução
 Compreender os hábitos de consumo dos clientes é um fator crítico para o sucesso de estratégias de vendas, marketing e organização de produtos. Conhecer quais itens são frequentemente adquiridos em conjunto permite otimizar desde a disposição de produtos em lojas físicas e virtuais até a definição de campanhas promocionais mais assertivas.
 
 **Este projeto tem como objetivo aplicar a técnica de Market Basket Analysis para identificar padrões de compra entre produtos, revelando associações que, muitas vezes, não são evidentes a partir da simples observação dos dados brutos.**
@@ -234,6 +255,28 @@ Referência: [TransactionEncoder: Convert item lists into transaction data for f
 
 ## 3 Fluxo de Tratamento dbt + Airflow
 
+O fluxo de tratamento dos dados neste projeto é estruturado em torno de duas ferramentas principais: dbt Core e Apache Airflow, seguindo a abordagem ELT (Extract, Load, Transform). Os dados brutos são armazenados no Snowflake, e as transformações são realizadas com o dbt. A automação e orquestração dessas etapas são feitas com o Astro CLI, uma interface para o Apache Airflow.
+
+
+Os dados brutos das transações são armazenados no Snowflake. A ingestão inicial foi realizada por meio do comando dbt seed, que permite carregar arquivos locais diretamente no Snowflake como ponto de partida para o pipeline.
+
+As transformações são realizadas com o dbt Core. Após a ingestão inicial via dbt seed, os dados são transformados diretamente dentro do Snowflake, seguindo a abordagem ELT. O fluxo é estruturado em camadas, conforme a arquitetura recomendada pela comunidade dbt. Exemplos de transformações realizadas em cada camada:
+- Staging:
+  - Renomeação de colunas (ex: ID_CLIENTE para cliente_id, NOME_CLIENTE para nome).
+  - Remoção de duplicatas com DISTINCT.
+  - Conversão de valores negativos em positivos com ABS() e substituição de zeros por NULL.
+  - Testes como not_null, unique e expression_is_true foram aplicados para validar a integridade dos dados.
+
+- Intermediate:
+  - Filtragem de pedidos realizados a partir de 1º de janeiro de 2024.
+  - Garantia de integridade referencial entre pedidos, produtos e clientes.
+  - Filtragem de clientes com idade igual ou superior a 18 anos.
+  - Agregações e deduplicações usando ROW_NUMBER() para manter apenas os registros mais recentes por id_transacao e id_produto.
+
+- Marts:
+  - Geração de uma view consolidada por transação contendo todos os produtos comprados agregados em uma única linha.
+  - Agrupamento dos nomes dos produtos comprados por transação para uso direto com o algoritmo Apriori.
+
 ## 4 Sistema de Recomendação com Apriori
 
 Um dos primeiros passos na análise foi identificar quais itens aparecem com maior frequência nas transações da base de dados.
@@ -251,6 +294,15 @@ No nosso caso, encontramos diversas regras com lift > 2, o que demonstra relaç�
 ![alt text](Imagens/regras_associativas.png)
 
 ## 5 Conclusão Geral 
+Este projeto demonstrou, de ponta a ponta, a aplicação da técnica de Market Basket Analysis em um ambiente simulado de e-commerce especializado em artigos esportivos. Por meio da combinação das ferramentas Snowflake, dbt Core e Apache Airflow (Astro CLI), foi possível estruturar um pipeline para ingestão, transformação, validação e preparação de dados com foco em recomendação de produtos.
+
+As transformações realizadas com o dbt permitiram tratar dados com erros propositais, padronizar e consolidar informações essenciais como produtos, clientes, pagamentos e pedidos. Essas transformações seguiram uma arquitetura em camadas (staging, intermediate, marts), garantindo organização, legibilidade e rastreabilidade em cada etapa.
+
+Em seguida, os dados transformados foram utilizados como base para a modelagem de regras de associação com o algoritmo Apriori, permitindo a identificação de padrões de consumo relevantes. Métricas como suporte e lift foram aplicadas para validar a força das associações encontradas.
+
+A orquestração com o Apache Airflow garantiu automação e controle de execução das etapas de transformação, com o Astro CLI simplificando o ambiente de desenvolvimento.
+
+A estrutura gerada permite recomendar produtos com base em histórico de compras e avaliar associações relevantes de forma interpretável. A solução é modular, auditável e pode ser facilmente adaptada para diferentes contextos de recomendação ou análise de comportamento de compra.
 
 ## 6 Instalação e configuração
 
