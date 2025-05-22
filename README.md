@@ -1,5 +1,5 @@
 
-# Recomendação de Produtos com Análise de Cesta de Mercado
+# Pipeline ELT para Recomendação de Produtos com Apriori, dbt Core, Snowflake e Airflow
 
 ## Resumo 
 Este projeto foi desenvolvido com base em dados sintéticos simulando um ambiente de e-commerce especializado em artigos esportivos. O objetivo foi aplicar a técnica de Market Basket Analysis para identificar padrões de compra entre produtos e gerar recomendações com base em regras de associação.
