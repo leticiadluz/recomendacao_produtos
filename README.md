@@ -236,7 +236,19 @@ Referência: [TransactionEncoder: Convert item lists into transaction data for f
 
 ## 4 Sistema de Recomendação com Apriori
 
-https://www.youtube.com/watch?v=Mq5HPAFXrOI 25
+Um dos primeiros passos na análise foi identificar quais itens aparecem com maior frequência nas transações da base de dados.
+
+A métrica **support** representa essa frequência, indicando a proporção de transações em que um determinado item ou conjunto de itens está presente. Por exemplo, produtos como "Tornozeleira Peso 2kg" e "Halteres 5kg Par" apresentaram um suporte de aproximadamente 11,76%, o que significa que estavam presentes em cerca de 11,76% de todas as compras analisadas.
+
+Itens com maior suporte têm maior relevância estatística e podem ser considerados candidatos naturais para recomendações ou destaques em campanhas de vendas.
+
+![alt text](Imagens/frequent_itemsets.png)
+
+Após filtrarmos os itens mais relevantes com base no suporte, aplicamos regras associativas utilizando o lift como principal métrica de avaliação. O lift indica o quanto a ocorrência de um item aumenta a probabilidade de outro item ser comprado junto, em comparação com o que seria esperado ao acaso. Valores de lift acima de 1 sugerem correlações positivas, e quanto maior o valor, mais forte é a associação. 
+
+No nosso caso, encontramos diversas regras com lift > 2, o que demonstra relações significativas entre produtos e reforça sua utilidade para estratégias de recomendação e vendas cruzadas.
+
+![alt text](Imagens/regras_associativas.png)
 
 ## 5 Conclusão Geral 
 

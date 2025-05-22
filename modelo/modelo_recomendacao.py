@@ -47,7 +47,11 @@ print(te.columns_)
 df_lista_produtos = pd.DataFrame(te_ary, columns=te.columns_)
 print(df_lista_produtos.head())
 
-frequent_itemsets = apriori(df_lista_produtos, min_support=0.1, use_colnames=True)
+frequent_itemsets = apriori(df_lista_produtos, min_support=0.01, use_colnames=True)
 print(frequent_itemsets)
 
-# https://www.youtube.com/watch?v=Mq5HPAFXrOI 38,20 
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1.5)
+print(rules[["antecedents", "consequents", "support", "confidence", "lift"]].sort_values(by="lift", ascending=False))
+
+
+
